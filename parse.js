@@ -1,20 +1,12 @@
 
 const cheerio = require('cheerio');
 const request = require('request');
-/*
-var express = require('express');
-var app = express();
-app.post('/', function(req, res){
-   res.send("Hello world!");
-});
-app.listen(3000);
-*/
+
 const parse = {}; 
 
 let doc1 = 'https://www.sec.gov/Archives/edgar/data/77476/000007747618000055/pepsicoq2-10xq6162018.htm'
 let doc2 = 'https://www.sec.gov/Archives/edgar/data/789019/000156459019001392/msft-10q_20181231.htm'
 let doc3 = 'https://www.sec.gov/Archives/edgar/data/320193/000032019319000010/a10-qq1201912292018.htm' 
-
 
 parse.getinfo = function(doc, callback) { 
     console.log(doc)
@@ -44,10 +36,6 @@ request(doc, function (error, response, body) {
         //regexes for getting information
         let re_IRS = /^\d{2}-\d{7}$/;
         let re_neti = /[^\d\$\,\.]*$/;
-        //let date_re1 = /^\d{1,2}\/\d{1,2}\/\d{4}$/;
-
-        //get date headers for each table
-        //let dates = []; 
 
         elements.map(e => {
             //go through each item
@@ -94,6 +82,17 @@ request(doc, function (error, response, body) {
                                 });
                             }
                         }
+                        //search for depreciation
+                        else if(testString1.toUpperCase().includes('DEPRECIATION') && Object.keys(data.depreciation).length == 0){
+                            //trim string to be just number
+                            let dep_strings = testString1.replace(/[^0-9\,\. ]/g, " ").trim().split(/[ ]+/);
+                            if(dates.length){
+                                dep_strings.forEach((i)=>{
+                                    let index = Object.keys(data.depreciation).length;
+                                    data.depreciation[dates[index]] = dep_strings[index];
+                                });
+                            }
+                        }
                     });
                 }
 
@@ -107,7 +106,6 @@ request(doc, function (error, response, body) {
 
         });
 
-
     }else{
         console.log("error: " + error);
     }
@@ -118,6 +116,6 @@ request(doc, function (error, response, body) {
 });
 }
 
-//parse.getinfo(doc1, ()=>{});
+parse.getinfo(doc1, ()=>{});
 
 module.exports = parse;
