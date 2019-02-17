@@ -57,17 +57,21 @@ request(doc, function (error, response, body) {
 
                         //go through each table
                         let testString1 = String($(o1).text());
+                        //console.log($(o1));
 
-                        let date_re1 = /\d{1,2}\/\d{1,2}\/\d{4}/;
+                        let date_re1 = /\d{1,2}\/\d{1,2}\/\d{4}/; 
                         
                         //get date headers for each table
                         let date = testString1.match(date_re1);
+                        let date1 = testString1.match(/\b[12][0-9]{3}\b/);
 
                         //create dates
-                        if(date != null && dates.length == 0){
-                            let dateSplit = testString1.replace(/[^0-9\/]/g, " ").trim().split(/[ ]+/);
+                        if((date != null || date1 != null) && dates.length == 0
+                            ){
+                            let dateSplit = testString1.replace(/[^0-9]/g, " ").trim().split(/[ ]+/);
                             dateSplit.forEach((i)=>{
-                                dates.push(i);
+                                if(i.length == 4)
+                                    dates.push(i);
                             });
                         }
                         
