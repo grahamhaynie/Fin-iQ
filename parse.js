@@ -4,7 +4,7 @@ const request = require('request');
 
 const parse = {}; 
 
-let doc1 = 'https://www.sec.gov/Archives/edgar/data/77476/000007747618000055/pepsicoq2-10xq6162018.htm'
+let doc1 = 'https://www.sec.gov/Archives/edgar/data/1318605/000156459018026353/tsla-10q_20180930.htm'
 let doc2 = 'https://www.sec.gov/Archives/edgar/data/789019/000156459019001392/msft-10q_20181231.htm'
 let doc3 = 'https://www.sec.gov/Archives/edgar/data/320193/000032019319000010/a10-qq1201912292018.htm' 
 
@@ -93,7 +93,8 @@ request(doc, function (error, response, body) {
                             if(dates.length){
                                 dep_strings.forEach((i)=>{
                                     let index = Object.keys(data.depreciation).length;
-                                    data.depreciation[dates[index]] = dep_strings[index];
+                                    if(dates[index] && !isNaN(dep_strings[index][0]))
+                                        data.depreciation[dates[index]] = dep_strings[index];
                                 });
                             }
                         }

@@ -25,10 +25,50 @@ image.makeImage = function(info, callback) {
                 .then((watermark) => {   
                 let counter = 0; 
                 Object.keys(info).forEach((item) => { 
-                    counter+=20;
-                    loadedImage.print(font, 5, 2 * (counter), item.toUpperCase() + ": " + info[item])
+                    
+                    switch(item.toUpperCase()){
+                        case 'NAME':
+                            loadedImage.print(font, loadedImageWidth/2 - 100, 2 * (counter), '10Q Filing: ' + info[item])
+                                .composite(watermark, loadedImageWidth - 180, -35)
+                                .write((fileNameNew));
+                            counter+=25;
+                            break;
+                        case 'IRS_ID':
+                            loadedImage.print(font, 5, 2 * (counter), 'IRS id: ' + info[item])
+                                .composite(watermark, loadedImageWidth - 180, -35)
+                                .write((fileNameNew));
+                            counter+=25;
+                            break;
+                        case 'NETINCOME':
+                            loadedImage.print(font, 5, 2 * (counter), 'Net income: ')
+                                .composite(watermark, loadedImageWidth - 180, -35)
+                                .write((fileNameNew));
+                            counter += 25;
+                            Object.keys(info[item]).forEach((year)=>{
+                                loadedImage.print(font, 50, 2 * (counter), year + ': $' + info[item][year])
+                                    .composite(watermark, loadedImageWidth - 180, -35)
+                                    .write((fileNameNew));
+                                    counter += 25;
+                            });
+                            break;
+                        case 'DEPRECIATION':
+                            loadedImage.print(font, 5, 2 * (counter), 'Deprecation: ')
                             .composite(watermark, loadedImageWidth - 180, -35)
-                    .write((fileNameNew));
+                            .write((fileNameNew));
+                            counter += 25;
+                            Object.keys(info[item]).forEach((year)=>{
+                                loadedImage.print(font, 50, 2 * (counter), year + ': $' + info[item][year])
+                                    .composite(watermark, loadedImageWidth - 180, -35)
+                                    .write((fileNameNew));
+                                    counter += 25;
+                            });
+                            break;
+                        default://do nothing
+                            break;
+                    }
+                    
+                    
+                    
                 })
                 })        
                 loadedImage

@@ -26,13 +26,15 @@ app.get('/waiting', (req, res) => {
 })
 
 app.post("/send_url", (req, res) => { 
-
-    parse.getinfo(req.body.url, (info) => { 
-        image.makeImage(info, () => {
-            res.sendFile(__dirname + "/public/test.html")
+    if(req.body.url.startsWith('https://www.sec.gov/Archives/edgar/data/')){
+        parse.getinfo(req.body.url, (info) => { 
+            image.makeImage(info, () => {
+                res.sendFile(__dirname + "/public/test.html")
+            })
         })
-        // res.sendFile(__dirname + "/public/waiting.html")
-    })
+    }else{
+        res.sendFile(__dirname + "/public/index.html")
+    }
 })
 
 app.get('/url_analyze', (req, res) => {
