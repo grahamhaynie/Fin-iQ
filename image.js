@@ -104,8 +104,4 @@ image.makeImage = function(info, callback) {
         });
 }
 
-// image.makeImage({'name': 'bob', 'occupation': 'mcdondlads'}, () => {
-
-// })
-
 module.exports = image; 
