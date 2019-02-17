@@ -10,14 +10,14 @@ var loadedImage;
 
 const image = {}; 
 
-let loadedImageHeight = 700;
+let loadedImageHeight = 1000;
 let loadedImageWidth = 700;
 
 image.makeImage = function(info, callback) { 
     Jimp.read(fileName)
         .then(function (image) {
             loadedImage = image;
-            loadedImage.resize(loadedImageHeight, loadedImageWidth)
+            loadedImage.resize(loadedImageWidth, loadedImageHeight)
             return Jimp.loadFont(Jimp.FONT_SANS_32_BLACK);
         })
         .then(function (font) {
@@ -63,11 +63,33 @@ image.makeImage = function(info, callback) {
                                     counter += 25;
                             });
                             break;
+                        case 'TOTAL_LIABILITIES':
+                            loadedImage.print(font, 5, 2 * (counter), 'Total Liabilities: ')
+                            .composite(watermark, loadedImageWidth - 180, -35)
+                            .write((fileNameNew));
+                            counter += 25;
+                            Object.keys(info[item]).forEach((year)=>{
+                                loadedImage.print(font, 50, 2 * (counter), year + ': $' + info[item][year])
+                                    .composite(watermark, loadedImageWidth - 180, -35)
+                                    .write((fileNameNew));
+                                    counter += 25;
+                            });
+                            break;
+                        case 'TCA':
+                            loadedImage.print(font, 5, 2 * (counter), 'Total Current Assets: ')
+                            .composite(watermark, loadedImageWidth - 180, -35)
+                            .write((fileNameNew));
+                            counter += 25;
+                            Object.keys(info[item]).forEach((year)=>{
+                                loadedImage.print(font, 50, 2 * (counter), year + ': $' + info[item][year])
+                                    .composite(watermark, loadedImageWidth - 180, -35)
+                                    .write((fileNameNew));
+                                    counter += 25;
+                            });
+                            break;
                         default://do nothing
                             break;
                     }
-                    
-                    
                     
                 })
                 })        

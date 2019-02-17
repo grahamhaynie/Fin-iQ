@@ -7,6 +7,7 @@ const parse = {};
 let doc1 = 'https://www.sec.gov/Archives/edgar/data/1318605/000156459018026353/tsla-10q_20180930.htm'
 let doc2 = 'https://www.sec.gov/Archives/edgar/data/789019/000156459019001392/msft-10q_20181231.htm'
 let doc3 = 'https://www.sec.gov/Archives/edgar/data/320193/000032019319000010/a10-qq1201912292018.htm' 
+let doc4 = 'https://www.sec.gov/Archives/edgar/data/77476/000007747618000055/pepsicoq2-10xq6162018.htm'
 
 parse.getinfo = function(doc, callback) { 
     console.log(doc)
@@ -16,7 +17,9 @@ request(doc, function (error, response, body) {
         name: null,
         irs_id: null,
         netIncome: {},
-        depreciation: {}
+        depreciation: {},
+        total_liabilities: {},
+        tca: {}
     };
     
     if(error == null){  
@@ -98,6 +101,28 @@ request(doc, function (error, response, body) {
                                 });
                             }
                         }
+                        else if(testString1.toUpperCase().includes('TOTAL LIABILITIES') && Object.keys(data.total_liabilities).length == 0){
+                            //trim string to be just number
+                            let lia_strings = testString1.replace(/[^0-9\,\. ]/g, " ").trim().split(/[ ]+/);
+                            if(dates.length){
+                                lia_strings.forEach((i)=>{
+                                    let index = Object.keys(data.total_liabilities).length;
+                                    if(dates[index] && !isNaN(lia_strings[index][0]))
+                                        data.total_liabilities[dates[index]] = lia_strings[index];
+                                });
+                            }
+                        }
+                        else if(testString1.toUpperCase().includes('TOTAL CURRENT ASSETS') && Object.keys(data.tca).length == 0){
+                            //trim string to be just number
+                            let tca_strings = testString1.replace(/[^0-9\,\. ]/g, " ").trim().split(/[ ]+/);
+                            if(dates.length){
+                                tca_strings.forEach((i)=>{
+                                    let index = Object.keys(data.tca).length;
+                                    if(dates[index] && !isNaN(tca_strings[index][0]))
+                                        data.tca[dates[index]] = tca_strings[index];
+                                });
+                            }
+                        }
                     });
                 }
 
@@ -121,6 +146,6 @@ request(doc, function (error, response, body) {
 });
 }
 
-parse.getinfo(doc1, ()=>{});
+parse.getinfo(doc4, ()=>{});
 
 module.exports = parse;
